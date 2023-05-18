@@ -8,19 +8,24 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Panel extends JPanel implements Runnable{
-
+//////////////////////////////////////////////////////////////////////////////////////////
     private ArrayList<GameObject> objects = new ArrayList<>();
-    private ArrayList<Graphics> graphics = new ArrayList<>();
-    private int numberOfObjects = 1;
     private Thread gameThread;
     private int x;
     private int y;
     private int FPS = 30;
-    public Panel(int x, int y){
+    GameObject test;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+    public Panel(int x, int y, int numberOfObjects, int speed){
         this.setPreferredSize(new Dimension(x, y));
         this.setDoubleBuffered(true);
         this.x = x;
         this.y = y;
+        test = new GameObject(x,y,speed);
+        for(int i = 0; i < numberOfObjects; i++){
+            objects.add(new GameObject(x, y, speed));
+        }
     }
 
     public void startGameThread(){
@@ -29,22 +34,16 @@ public class Panel extends JPanel implements Runnable{
     }
     @Override
     public void run() {
-        for(int i = 0; i < numberOfObjects; i++){
-            objects.add(new GameObject(x, y, 6));
-        }
 
-        double drawInterval = 1000000000/FPS;                       ////////////////
-        double nextDrawTime = System.nanoTime() + drawInterval;     //GameLoop
-        int direction = new Random().nextInt(4);             ////////////////
+        double drawInterval = 1000000000/FPS;                       //GameLoop - nesahat
+        double nextDrawTime = System.nanoTime() + drawInterval;     ////////////////////
 
         while(gameThread != null){
-
-            update(direction);
-            for(GameObject o : objects){
-                repaint(o);
+            for(GameObject o: objects){
+                update(o);
             }
-
-
+            //System.out.println(objects.toString());
+            repaint();
 //////////////////////////////GameLoop/////////////////////////////////////nesahat
             try {
                 double remainingTime = (nextDrawTime - System.nanoTime())/1000000;
@@ -62,14 +61,14 @@ public class Panel extends JPanel implements Runnable{
 
     }
 
-    public void update(int temp){
-        for(GameObject o: objects){
-            o.move(x, y, temp);
-        }
+    public void update(GameObject o){
+        o.movement(x, y);
     }
 
-    public void paintComponent(Graphics g, GameObject o){
+    public void paintComponent(Graphics g){
         super.paintComponent(g);
+        for(GameObject o : objects){
             o.draw(g);
+        }
     }
 }
