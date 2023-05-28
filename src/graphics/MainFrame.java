@@ -8,7 +8,7 @@ public class MainFrame extends JFrame {
     public MainFrame(int x, int y, String title, int numberOfObjects, int speed){
         panel = new Panel(x, y, numberOfObjects, speed);
         this.add(panel);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setTitle(title);
